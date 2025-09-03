@@ -1,15 +1,33 @@
----
-title: Choosing where your workflow runs
-shortTitle: Choose where workflows run
-intro: You can specify the compute environment your jobs and workflows run in.
-versions:
-  fpt: '*'
-  ghes: '*'
-  ghec: '*'
-children:
-  - /choose-the-runner-for-a-job
-  - /run-jobs-in-a-container
-redirect_from:
-  - /actions/writing-workflows/choosing-where-your-workflow-runs
-  - /actions/how-tos/writing-workflows/choosing-where-your-workflow-runs
----
+name: Node.js CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Start application
+      run: npm start
